@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if workout %}Edit Workout Record{% else %}New Workout{% endif %} - Fitness Tracking System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-dumbbell"></i> 
+        {% if workout %}Edit Workout Record{% else %}New Workout{% endif %}
+    </h1>
+    <a href="{% url 'workout-list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+            {% if workout %}Edit Record{% else %}Record Workout Activity{% endif %}
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" id="workout-form">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.category|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.plan|as_crispy_field }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    {{ form.date|as_crispy_field }}
+                </div>
+                <div class="col-md-4">
+                    {{ form.start_time|as_crispy_field }}
+                </div>
+                <div class="col-md-4">
+                    {{ form.end_time|as_crispy_field }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.calories_burned|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.notes|as_crispy_field }}
+                </div>
+            </div>
+            
+            <hr>
+            
+            <h4>Exercises</h4>
+            <div class="formset-container">
+                {{ formset.management_form }}
+                
+                <div class="form-rows">
+                    {% for form in formset %}
+                    <div class="form-row mb-3 p-3 border rounded{% if forloop.last and not form.instance.pk %} empty-form{% endif %}"
+                        {% if forloop.last and not form.instance.pk %}style="display: none;"{% endif %}>
+                        
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ form.exercise|as_crispy_field }}
+                            </div>
+                            <div class="col-md-2">
+                                {{ form.sets|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.reps|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.weight|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{ form.notes|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-sm btn-danger delete-form-row">
+                                <i class="fas fa-trash"></i> Delete Exercise
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="text-center mt-3 mb-4">
+                    <button type="button" class="btn btn-success add-form-row">
+                        <i class="fas fa-plus"></i> Add Exercise
+                    </button>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save"></i> Save Record
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+/* 自定义样式 */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+}
+
+.btn {
+    border-radius: 0.25rem;
+}
+
+/* 健身打卡卡片样式 */
+.workout-card {
+    transition: transform 0.2s;
+}
+
+.workout-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 图表样式调整 */
+canvas {
+    max-width: 100%;
+}
+
+/* 数据展示标签样式 */
+.stat-label {
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #212529;
+}
+
+/* 表格样式 */
+.table th {
+    background-color: #f8f9fa;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+}

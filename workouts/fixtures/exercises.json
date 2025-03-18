@@ -1,0 +1,227 @@
+[
+  {
+    "model": "workouts.exercise",
+    "pk": 1,
+    "fields": {
+      "name": "Squat",
+      "category": 2,
+      "description": "Basic compound movement targeting thighs, glutes, and core muscles"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 2,
+    "fields": {
+      "name": "Bench Press",
+      "category": 2,
+      "description": "Basic compound movement targeting chest, triceps, and shoulders"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 3,
+    "fields": {
+      "name": "Deadlift",
+      "category": 2,
+      "description": "Basic compound movement targeting back, glutes, and legs"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 4,
+    "fields": {
+      "name": "Pull-Up",
+      "category": 2,
+      "description": "Basic compound movement targeting back and arms"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 5,
+    "fields": {
+      "name": "Push-Up",
+      "category": 2,
+      "description": "Basic compound movement targeting chest, shoulders, and core"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 6,
+    "fields": {
+      "name": "Running",
+      "category": 1,
+      "description": "Basic cardio training to improve cardiovascular function"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 7,
+    "fields": {
+      "name": "Swimming",
+      "category": 1,
+      "description": "Full-body cardio exercise, low-impact and joint-friendly"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 8,
+    "fields": {
+      "name": "Cycling",
+      "category": 1,
+      "description": "Cardio training targeting leg muscles"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 9,
+    "fields": {
+      "name": "Elliptical",
+      "category": 1,
+      "description": "Low-impact full-body cardio training"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 10,
+    "fields": {
+      "name": "Stair Climber",
+      "category": 1,
+      "description": "High-intensity cardio training to elevate heart rate and burn calories"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 11,
+    "fields": {
+      "name": "Yoga - Sun Salutation",
+      "category": 3,
+      "description": "Yoga sequence to activate full-body muscles and elevate heart rate"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 12,
+    "fields": {
+      "name": "Yoga - Warrior Pose",
+      "category": 3,
+      "description": "Yoga standing pose to improve balance and leg strength"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 13,
+    "fields": {
+      "name": "Downward Dog",
+      "category": 3,
+      "description": "Classic yoga pose to stretch the entire body and strengthen arms"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 14,
+    "fields": {
+      "name": "Crunch",
+      "category": 5,
+      "description": "Basic movement targeting rectus abdominis"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 15,
+    "fields": {
+      "name": "Plank",
+      "category": 5,
+      "description": "Static exercise to improve core stability"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 16,
+    "fields": {
+      "name": "Side Plank",
+      "category": 5,
+      "description": "Exercise targeting obliques and core stability"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 17,
+    "fields": {
+      "name": "Glute Bridge",
+      "category": 5,
+      "description": "Basic movement targeting glutes and core"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 18,
+    "fields": {
+      "name": "Dumbbell Row",
+      "category": 2,
+      "description": "Movement targeting back and biceps"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 19,
+    "fields": {
+      "name": "Lunge",
+      "category": 2,
+      "description": "Unilateral movement targeting thighs and glutes"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 20,
+    "fields": {
+      "name": "Deep Stretch - Hips",
+      "category": 4,
+      "description": "Stretching hip muscle group to reduce tension and stress"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 21,
+    "fields": {
+      "name": "Deep Stretch - Hamstrings",
+      "category": 4,
+      "description": "Stretching back of leg muscles to improve flexibility"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 22,
+    "fields": {
+      "name": "Foam Roller Massage - Back",
+      "category": 4,
+      "description": "Using foam roller to alleviate back muscle tension and pain"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 23,
+    "fields": {
+      "name": "Burpee",
+      "category": 6,
+      "description": "High-intensity full-body movement combining push-up and jump"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 24,
+    "fields": {
+      "name": "Mountain Climbers",
+      "category": 6,
+      "description": "High-intensity movement targeting core and elevating heart rate"
+    }
+  },
+  {
+    "model": "workouts.exercise",
+    "pk": 25,
+    "fields": {
+      "name": "Jump Rope",
+      "category": 6,
+      "description": "High-intensity cardio training to improve coordination and explosive power"
+    }
+  }
+]

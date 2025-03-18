@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile - Fitness Tracking System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Profile Information -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-user-edit"></i> Profile</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.username|as_crispy_field }}
+                            {{ form.email|as_crispy_field }}
+                            {{ form.gender|as_crispy_field }}
+                            {{ form.birth_date|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.height|as_crispy_field }}
+                            {{ form.weight|as_crispy_field }}
+                            {{ form.target_weight|as_crispy_field }}
+                            {{ form.profile_picture|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    {{ form.bio|as_crispy_field }}
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Information Card -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-info-circle"></i> Personal Information Overview</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="{{ user.username }}" class="rounded-circle img-thumbnail">
+                    {% endif %}
+                    <h5 class="mt-3">{{ user.username }}</h5>
+                    <p class="text-muted">{{ user.email }}</p>
+                </div>
+                
+                <div class="mb-2">
+                    <strong>Gender: </strong>
+                    <span>{{ user.get_gender_display|default:"Not set" }}</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Birth Date: </strong>
+                    <span>{{ user.birth_date|default:"Not set" }}</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Height: </strong>
+                    <span>{% if user.height %}{{ user.height }} cm{% else %}Not set{% endif %}</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Current Weight: </strong>
+                    <span>{% if user.weight %}{{ user.weight }} kg{% else %}Not set{% endif %}</span>
+                </div>
+                <div class="mb-2">
+                    <strong>Target Weight: </strong>
+                    <span>{% if user.target_weight %}{{ user.target_weight }} kg{% else %}Not set{% endif %}</span>
+                </div>
+                <div>
+                    <strong>BMI Index: </strong>
+                    <span>{% if user.bmi %}{{ user.bmi }} ({{ user.bmi|floatformat:0 }}%){% else %}Unknown{% endif %}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-link"></i> Quick Links</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{% url 'body-records' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-weight"></i> My Body Records
+                    </a>
+                    <a href="{% url 'body-record-create' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus"></i> New Body Record
+                    </a>
+                    <a href="{% url 'body-analysis' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-chart-line"></i> Body Metrics Analysis
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Weight Change Chart -->
+{% if body_records %}
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> Weight Change Trend</h5>
+    </div>
+    <div class="card-body">
+        <canvas id="weightChart" height="300"></canvas>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function(){
+        // Date picker
+        $('input[name="birth_date"]').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+            language: 'en',
+            clearBtn: true
+        });
+    });
+
+    {% if body_records %}
+    // Weight change chart
+    const weightCtx = document.getElementById('weightChart').getContext('2d');
+    const weightData = [
+        {% for record in body_records %}
+            {
+                x: '{{ record.date|date:"Y-m-d" }}',
+                y: {{ record.weight }}
+            }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    
+    const weightChart = new Chart(weightCtx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Weight (kg)',
+                data: weightData,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Weight Change Trend'
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Weight (kg)'
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

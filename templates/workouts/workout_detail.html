@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Workout Details - Fitness Tracking System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-dumbbell"></i> Workout Details</h1>
+    <div>
+        <a href="{% url 'workout-update' workout.pk %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'workout-delete' workout.pk %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        <a href="{% url 'workout-list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+<!-- Workout Basic Info Card -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-info-circle"></i> Basic Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th>Category</th>
+                            <td>{{ workout.category.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>{{ workout.date }}</td>
+                        </tr>
+                        <tr>
+                            <th>Time</th>
+                            <td>{{ workout.start_time }} - {{ workout.end_time }}</td>
+                        </tr>
+                        <tr>
+                            <th>Duration</th>
+                            <td>{{ workout.duration|default:'Unknown' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Calories Burned</th>
+                            <td>{{ workout.calories_burned|default:'0' }} kcal</td>
+                        </tr>
+                        {% if workout.plan %}
+                        <tr>
+                            <th>Workout Plan</th>
+                            <td><a href="{% url 'plan-detail' workout.plan.pk %}">{{ workout.plan.title }}</a></td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-sticky-note"></i> Notes</h5>
+            </div>
+            <div class="card-body">
+                {% if workout.notes %}
+                <p>{{ workout.notes|linebreaks }}</p>
+                {% else %}
+                <p class="text-muted">No notes</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exercise List -->
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-list"></i> Exercises</h5>
+    </div>
+    <div class="card-body">
+        {% if workout.exercises.all %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Exercise Name</th>
+                        <th>Sets</th>
+                        <th>Reps per Set</th>
+                        <th>Weight(kg)</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exercise in workout.exercises.all %}
+                    <tr>
+                        <td>{{ exercise.exercise.name }}</td>
+                        <td>{{ exercise.sets }}</td>
+                        <td>{{ exercise.reps }}</td>
+                        <td>{{ exercise.weight|default:'-' }}</td>
+                        <td>{{ exercise.notes|default:'-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-muted py-4">No exercises recorded</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

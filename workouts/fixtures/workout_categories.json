@@ -1,0 +1,50 @@
+[
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 1,
+      "fields": {
+        "name": "Cardio",
+        "description": "Exercises that improve cardiovascular function and burn calories"
+      }
+    },
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 2,
+      "fields": {
+        "name": "Strength Training",
+        "description": "Exercises focused on building muscle strength and increasing muscle mass"
+      }
+    },
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 3,
+      "fields": {
+        "name": "Yoga",
+        "description": "Exercises that improve flexibility and balance"
+      }
+    },
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 4,
+      "fields": {
+        "name": "Stretching & Recovery",
+        "description": "Exercises that help muscle recovery and reduce injury risk"
+      }
+    },
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 5,
+      "fields": {
+        "name": "Core Training",
+        "description": "Training methods for strengthening core and back muscles"
+      }
+    },
+    {
+      "model": "workouts.workoutcategory",
+      "pk": 6,
+      "fields": {
+        "name": "High-Intensity Interval Training (HIIT)",
+        "description": "High-intensity exercise method with short rest intervals"
+      }
+    }
+  ]

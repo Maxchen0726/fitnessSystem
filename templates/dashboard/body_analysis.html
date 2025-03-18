@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% block title %}Body Metrics Analysis - Fitness Tracking System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-weight"></i> Body Metrics Analysis</h1>
+    <div>
+        <a href="{% url 'body-record-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Record
+        </a>
+        <a href="{% url 'body-records' %}" class="btn btn-info">
+            <i class="fas fa-list"></i> View Records
+        </a>
+    </div>
+</div>
+
+<!-- No data message -->
+{% if not weight_data %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-weight fa-4x text-muted"></i>
+        </div>
+        <h3>No Body Metrics Data Available</h3>
+        <p class="text-muted">Add body metrics records to start tracking your physical changes!</p>
+        <a href="{% url 'body-record-create' %}" class="btn btn-primary btn-lg mt-3">
+            <i class="fas fa-plus"></i> Add Body Record
+        </a>
+    </div>
+</div>
+{% else %}
+
+<!-- Weight Change Chart -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> Weight Change Trend</h5>
+    </div>
+    <div class="card-body" style="height: 250px;">
+        <canvas id="weightChart"></canvas>
+    </div>
+</div>
+
+<!-- BMI Change Chart -->
+{% if bmi_data %}
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> BMI Change Trend</h5>
+    </div>
+    <div class="card-body" style="height: 250px;">
+        <canvas id="bmiChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+<!-- Body Fat Change Chart -->
+{% if body_fat_data %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> Body Fat Change Trend</h5>
+    </div>
+    <div class="card-body" style="height: 250px;">
+        <canvas id="bodyFatChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+<!-- Measurements Change Chart -->
+{% if measurements.chest or measurements.waist or measurements.hips %}
+<div class="card">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> Measurements Change Trend</h5>
+    </div>
+    <div class="card-body" style="height: 250px;">
+        <canvas id="measurementsChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if weight_data %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Weight change chart
+        const weightData = {{ weight_data|safe }};
+        const weightCtx = document.getElementById('weightChart').getContext('2d');
+        const weightChart = new Chart(weightCtx, {
+            type: 'line',
+            data: {
+                labels: weightData.map(function(item) { return item[0]; }),
+                datasets: [{
+                    label: 'Weight (kg)',
+                    data: weightData.map(function(item) { return item[1]; }),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }{% if target_weight %}, {
+                    label: 'Target Weight',
+                    data: Array(weightData.length).fill({{ target_weight }}),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderDash: [5, 5],
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false
+                }{% endif %}]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Weight Change Trend (kg)',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+        
+        {% if bmi_data %}
+        // BMI change chart
+        const bmiData = {{ bmi_data|safe }};
+        const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+        const bmiChart = new Chart(bmiCtx, {
+            type: 'line',
+            data: {
+                labels: bmiData.map(function(item) { return item[0]; }),
+                datasets: [{
+                    label: 'BMI Index',
+                    data: bmiData.map(function(item) { return item[1]; }),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'BMI Index Change',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        {% if body_fat_data %}
+        // Body fat change chart
+        const bodyFatData = {{ body_fat_data|safe }};
+        const bodyFatCtx = document.getElementById('bodyFatChart').getContext('2d');
+        const bodyFatChart = new Chart(bodyFatCtx, {
+            type: 'line',
+            data: {
+                labels: bodyFatData.map(function(item) { return item[0]; }),
+                datasets: [{
+                    label: 'Body Fat (%)',
+                    data: bodyFatData.map(function(item) { return item[1]; }),
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Body Fat Change (%)',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        {% if measurements.chest or measurements.waist or measurements.hips %}
+        // Measurements change chart
+        const measurementsCtx = document.getElementById('measurementsChart').getContext('2d');
+        const measurementsData = {
+            labels: [],
+            datasets: []
+        };
+        
+        {% if measurements.chest %}
+        const chestData = {{ measurements.chest|safe }};
+        measurementsData.labels = chestData.map(function(item) { return item[0]; });
+        measurementsData.datasets.push({
+            label: 'Chest (cm)',
+            data: chestData.map(function(item) { return item[1]; }),
+            borderColor: 'rgba(153, 102, 255, 1)',
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            tension: 0.1,
+            fill: false
+        });
+        {% endif %}
+        
+        {% if measurements.waist %}
+        const waistData = {{ measurements.waist|safe }};
+        if (measurementsData.labels.length === 0) {
+            measurementsData.labels = waistData.map(function(item) { return item[0]; });
+        }
+        measurementsData.datasets.push({
+            label: 'Waist (cm)',
+            data: waistData.map(function(item) { return item[1]; }),
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            tension: 0.1,
+            fill: false
+        });
+        {% endif %}
+        
+        {% if measurements.hips %}
+        const hipsData = {{ measurements.hips|safe }};
+        if (measurementsData.labels.length === 0) {
+            measurementsData.labels = hipsData.map(function(item) { return item[0]; });
+        }
+        measurementsData.datasets.push({
+            label: 'Hips (cm)',
+            data: hipsData.map(function(item) { return item[1]; }),
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1,
+            fill: false
+        });
+        {% endif %}
+        
+        const measurementsChart = new Chart(measurementsCtx, {
+            type: 'line',
+            data: measurementsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Measurements Change (cm)',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+    });
+</script>
+{% endif %}
+{% endblock %}

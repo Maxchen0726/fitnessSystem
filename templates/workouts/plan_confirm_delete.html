@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Delete Fitness Plan - Fitness Tracking System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h5>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete the fitness plan <strong>"{{ object.title }}"</strong>? This action cannot be undone.</p>
+        
+        {% if object.workouts.all %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-circle"></i> <strong>Warning:</strong> 
+            This plan has been used in {{ object.workouts.count }} workout records. Deleting this plan will not delete related records, but will remove their association with this plan.
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'plan-list' %}" class="btn btn-secondary me-2">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirm Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
